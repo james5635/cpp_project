@@ -1,3 +1,3 @@
 # cpp_project
-Applications implemented in c++
+A collection of applications implemented in c++
 - [ ] Task Tracker
