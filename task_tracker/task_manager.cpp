@@ -4,6 +4,7 @@
 #include <chrono>
 #include <fstream>
 #include <string>
+#include <algorithm>
 TaskManager::TaskManager()
 {
     readFromFile();
@@ -28,6 +29,80 @@ void TaskManager::listTask() const
     for (const auto &t : tasks)
     {
         cout << t.toJson() << endl;
+    }
+}
+void TaskManager::listTodoTask() const
+{
+    for (const auto &t : tasks)
+    {
+        if (t.status == "todo")
+            cout << t.toJson() << endl;
+    }
+}
+void TaskManager::listInProgressTask() const
+{
+    for (const auto &t : tasks)
+    {
+        if (t.status == "in-progress")
+            cout << t.toJson() << endl;
+    }
+}
+void TaskManager::listDoneTask() const
+{
+    for (const auto &t : tasks)
+    {
+        if (t.status == "done")
+            cout << t.toJson() << endl;
+    }
+}
+
+void TaskManager::deleteTask(size_t id)
+{
+    auto it = std::find_if(tasks.begin(), tasks.end(), [id](const Task &t)
+                           { return t.id == id; });
+    if (it != tasks.end())
+    {
+        tasks.erase(it);
+        saveToFile();
+    }
+}
+void TaskManager::updateTask(size_t id, const string &description)
+{
+    auto it = std::find_if(tasks.begin(), tasks.end(), [id](const Task &t)
+                           { return t.id == id; });
+
+    if (it != tasks.end())
+    {
+        it->description = description;
+
+        using system_clock = std::chrono::system_clock;
+        auto currentTime = system_clock::to_time_t(system_clock::now());
+        std::string updatedAt = std::string((std::ctime(&currentTime)));
+        updatedAt.pop_back();
+
+        it->updatedAt = updatedAt;
+        saveToFile();
+    }
+}
+
+void TaskManager::markInProgress(size_t id)
+{
+    auto it = std::find_if(tasks.begin(), tasks.end(), [id](const Task &t)
+                           { return t.id == id; });
+    if (it != tasks.end())
+    {
+        it->status = "in-progress";
+        saveToFile();
+    }
+}
+void TaskManager::markDone(size_t id)
+{
+    auto it = std::find_if(tasks.begin(), tasks.end(), [id](const Task &t)
+                           { return t.id == id; });
+    if (it != tasks.end())
+    {
+        it->status = "done";
+        saveToFile();
     }
 }
 void TaskManager::saveToFile()

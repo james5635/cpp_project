@@ -25,34 +25,120 @@ void usage()
 int main(int argc, char *argv[])
 {
     TaskManager manager;
-    if (argc == 1)
+    try
     {
-        usage();
-        return 0;
-    }
-    else if (argc == 2)
-    {
-        if (std::string(argv[1]) == "add")
+
+        if (argc == 1)
         {
-            std::cout << "need description" << std::endl;
+            usage();
+            return 0;
         }
-        else if (std::string(argv[1]) == "list")
+        else if (argc == 2)
+        {
+            if (std::string(argv[1]) == "add")
+            {
+                std::cout << "need <description> " << std::endl;
+            }
+            else if (std::string(argv[1]) == "list")
+            {
+
+                manager.listTask();
+            }
+            else if (std::string(argv[1]) == "delete")
+            {
+                std::cout << "need <id>" << std::endl;
+            }
+            else if (std::string(argv[1]) == "update")
+            {
+                std::cout << "need <id> <desc>" << std::endl;
+            }
+            else if (std::string(argv[1]) == "mark-in-progress")
+            {
+                std::cout << "need mark-in-progress <id> " << std::endl;
+            }
+            else if (std::string(argv[1]) == "mark-done")
+            {
+                std::cout << "need mark-done <id> " << std::endl;
+            }
+        }
+        else if (argc == 3)
+        {
+            if (std::string(argv[1]) == "add")
+            {
+                if (std::string(argv[2]) != "\0")
+                {
+                    manager.addTask(std::string(argv[2]));
+                }
+                {
+                }
+            }
+            else if (std::string(argv[1]) == "list")
+            {
+
+                if (std::string(argv[2]) == "todo")
+                {
+                    manager.listTodoTask();
+                }
+                else if (std::string(argv[2]) == "in-progress")
+                {
+                    manager.listInProgressTask();
+                }
+                else if (std::string(argv[2]) == "done")
+                {
+                    manager.listDoneTask();
+                }
+            }
+            else if (std::string(argv[1]) == "delete")
+            {
+                if (std::string(argv[2]) != "\0")
+                {
+                    manager.deleteTask(std::stoi(std::string(argv[2])));
+                }
+            }
+            else if (std::string(argv[1]) == "update")
+            {
+                if (std::string(argv[2]) != "\0")
+                {
+                    std::cout << "need <id> <desc>" << std::endl;
+                }
+            }
+            else if (std::string(argv[1]) == "mark-in-progress")
+            {
+                if (std::string(argv[2]) != "\0")
+                {
+                    manager.markInProgress(std::stoi(std::string(argv[2])));
+                }
+            }
+            else if (std::string(argv[1]) == "mark-done")
+            {
+                if (std::string(argv[2]) != "\0")
+                {
+                    manager.markDone(std::stoi(std::string(argv[2])));
+                }
+            }
+        }
+        else if (argc == 4)
         {
 
-            manager.listTask();
+            if (std::string(argv[1]) == "update")
+            {
+                if (std::string(argv[2]) != "\0")
+                {
+                    if (std::string(argv[3]) != "\0")
+                        manager.updateTask(std::stoi(std::string(argv[2])), std::string(argv[3]));
+                }
+            }
         }
+        return 0;
     }
-    else if (argc == 3)
+    // catch (const exception &ex)
+    // {
+    //     std::cout << "Error: " << ex.what() << std::endl;
+    //     return 1;
+    // }
+    catch (...)
     {
-        if (std::string(argv[1]) == "add")
-        {
-            if (std::string(argv[2]) != "\0")
-            {
-                manager.addTask(std::string(argv[2]));
-            }
-            {
-            }
-        }
+        std::cout << "Error: invalid input" << std::endl;
+        return 1;
     }
-    return 0;
 }
