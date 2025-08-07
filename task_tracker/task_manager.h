@@ -1,17 +1,17 @@
 #pragma once
 
-#include "task.h"
 #include <vector>
+
+#include "task.h"
 using namespace std;
-class TaskManager
-{
-private:
+class TaskManager {
+   private:
     vector<Task> tasks;
 
-public:
+   public:
     TaskManager();
-    void addTask(const string &description,
-                 const string &status = "todo");
+    void addTask(const string &description, const string &status = "todo");
+    void addTask(const Task &task);
     void listTask() const;
     void listTodoTask() const;
     void listInProgressTask() const;

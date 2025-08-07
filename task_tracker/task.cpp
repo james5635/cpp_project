@@ -1,6 +1,5 @@
 #include "task.h"
 #include <sstream>
-#include <algorithm>
 string Task::toJson() const
 {
     ostringstream oss;
