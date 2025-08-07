@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <chrono>
+#include <cstdlib>
 #include <ctime>
 #include <fstream>
 #include <iostream>
@@ -19,7 +20,10 @@ void TaskManager::addTask(const string &description, const string &status) {
 
     saveToFile();
 }
-void TaskManager::addTask(const Task &task) { tasks.push_back(task); }
+void TaskManager::addTask(const Task &task) {
+    tasks.push_back(task);
+    saveToFile();
+}
 void TaskManager::listTask() const {
     for (const auto &t : tasks) {
         cout << t.toJson() << endl;
