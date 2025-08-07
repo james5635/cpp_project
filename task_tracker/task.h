@@ -2,8 +2,7 @@
 #define TASK_H
 #include <string>
 using namespace std;
-struct Task
-{
+struct Task {
     size_t id;
     string description;
     string status;

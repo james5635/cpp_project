@@ -78,6 +78,24 @@
         "cfenv": "cpp",
         "cinttypes": "cpp",
         "valarray": "cpp",
-        "variant": "cpp"
-    }
+        "variant": "cpp",
+        "strstream": "cpp",
+        "csetjmp": "cpp",
+        "csignal": "cpp",
+        "source_location": "cpp",
+        "shared_mutex": "cpp",
+        "typeindex": "cpp",
+        "expected": "cpp",
+        "stack": "cpp",
+        "print": "cpp"
+    },
+    "[cpp]": {
+        "editor.links": false
+    },
+    "C_Cpp.default.compileCommands": [
+
+         "${workspaceFolder}/task_tracker/compile_commands.json",
+    ],
+    "C_Cpp.default.intelliSenseMode": "",
+    "C_Cpp.intelliSenseEngine": "disabled",
 }
