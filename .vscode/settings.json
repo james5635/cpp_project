@@ -98,4 +98,5 @@
     ],
     "C_Cpp.default.intelliSenseMode": "",
     "C_Cpp.intelliSenseEngine": "disabled",
+    "editor.tabSize": 2,
 }

@@ -1,0 +1,43 @@
+bazel_dep(name = "rules_cc", version = "0.2.0")
+bazel_dep(name = "googletest", version = "1.17.0")
+bazel_dep(name = "nlohmann_json", version = "3.12.0")
+bazel_dep(name = "fmt", version = "11.2.0")
+
+bazel_dep(name = "cli11", version = "2.5.0")
+
+# git_repo = use_repo_rule("@bazel_tools//tools/build_defs/repo:git.bzl", "new_git_repository")
+# git_repo(
+#     name = "cli11",
+#     remote = "https://github.com/CLIUtils/CLI11",
+#     # 2.1.2
+#     commit = "70f8072f9dd2292fd0b9f9e5f58e279f60483ed3",
+#     # 2.5.0
+#     # commit = "bb9bd85e3b8129571b084911affc6f0e9ae6be25",
+#     # other
+#     # commit = "b9be5b9444772324459989177108a6a65b8b2769",
+#     # In bazel, a package is a directory that contains BUILD file.
+#     build_file = "//third_party:CLI11.v2_1_2.BUILD",  # Your custom BUILD file
+#     # workspace_file = "//third_party:MODULE.bazel",
+#     # Replace the commit hash (above) with the latest (https://github.com/hedronvision/bazel-compile-commands-extractor/commits/main).
+#     # Even better, set up Renovate and let it do the work for you (see "Suggestion: Updates" in the README).
+#     #     build_file_content = """
+#     # cc_library(
+#     #     name = "cli11",
+#     #     # srcs = glob(["src/**/*.cpp"]),
+#     #     hdrs = glob(["include/**/*.hpp"]),
+#     #     local_defines = ["CLI11_COMPILE"],
+#     #     strip_include_prefix = "/include",
+#     #     visibility = ["//visibility:public"],
+#     # ) """,
+# )
+
+# Hedron's Compile Commands Extractor for Bazel
+# https://github.com/hedronvision/bazel-compile-commands-extractor
+bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
+git_override(
+    module_name = "hedron_compile_commands",
+    remote = "https://github.com/mikael-s-persson/bazel-compile-commands-extractor",
+    commit = "02d15621b528efd877f5d5657c4b738523a0eb17",
+    # Replace the commit hash (above) with the latest (https://github.com/hedronvision/bazel-compile-commands-extractor/commits/main).
+    # Even better, set up Renovate and let it do the work for you (see "Suggestion: Updates" in the README).
+)

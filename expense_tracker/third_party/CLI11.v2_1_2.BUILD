@@ -1,0 +1,10 @@
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+cc_library(
+    name = "cli11",
+    # srcs = glob(["src/**/*.cpp"]),
+    hdrs = glob(["include/**/*.hpp"]),
+    local_defines = ["CLI11_COMPILE"],
+    strip_include_prefix = "/include",
+    visibility = ["//visibility:public"],
+)
