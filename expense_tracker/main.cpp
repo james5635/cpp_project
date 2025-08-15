@@ -1,37 +1,34 @@
+#include "CLI/CLI.hpp"
 #include "expense_manager.h"
 #include <CLI/CLI.hpp>
 #include <iostream>
 void usage() {}
 int main(int argc, char *argv[]) {
-  using std::cout;
-  using std::endl;
-  CLI::App app{"Flag example program"};
+  ExpenseManager em{};
+  CLI::App app{"Track and manage personal/business expenses"};
 
-  /// [define]
-  bool flag_bool;
-  app.add_flag("--bool,-b", flag_bool, "This is a bool flag");
+  auto add = app.add_subcommand("add", "add an expense");
+  std::string description;
+  size_t amount;
+  add->add_option("--description", description, "description of expense")
+      ->required();
+  add->add_option("--amount", amount, "amount of expense")->required();
+  add->callback([&]() { em.AddExpense(description, amount); });
 
-  int flag_int;
-  app.add_flag("-i,--int", flag_int, "This is an int flag");
-
-  CLI::Option *flag_plain = app.add_flag("--plain,-p", "This is a plain flag");
-  /// [define]
-
-  /// [parser]
-  try {
-    app.parse(argc, argv);
-  } catch (const CLI::ParseError &e) {
-    return app.exit(e);
-  }
-  /// [parser]
-
-  /// [usage]
-  cout << "The flags program" << endl;
-  if (flag_bool)
-    cout << "Bool flag passed" << endl;
-  if (flag_int > 0)
-    cout << "Flag int: " << flag_int << endl;
-  if (*flag_plain)
-    cout << "Flag plain: " << flag_plain->count() << endl;
-  /// [usage]
+  auto list = app.add_subcommand("list", "list all expenses");
+  list->callback([&]() { em.ListExpense(); });
+  short month = 0;
+  auto summary = app.add_subcommand("summary", "summary expenses");
+  summary->add_option("--month", month, "month for expenses");
+  summary->callback([&]() {
+    if (!month)
+      em.SummaryExpense();
+    else
+      em.SummaryExpense(month);
+  });
+  auto delete_ = app.add_subcommand("delete", "delete an expense");
+  size_t id;
+  delete_->add_option("--id", id, "id for the expense to be deleted");
+  delete_->callback([&]() { em.DeleteExpense(id); });
+  CLI11_PARSE(app, argc, argv);
 }

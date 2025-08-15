@@ -1,5 +1,6 @@
 #pragma once
 #include <cstddef>
+#include <nlohmann/json.hpp>
 #include <string>
 class Expense {
 public:
@@ -10,4 +11,5 @@ public:
   std::string date;
   std::string description;
   size_t amount;
+  NLOHMANN_DEFINE_TYPE_INTRUSIVE(Expense, id, date, description, amount);
 };

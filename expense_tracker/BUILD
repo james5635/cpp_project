@@ -1,7 +1,6 @@
 load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
 load("@rules_cc//cc:cc_library.bzl", "cc_library")
 
-
 cc_library(
     name = "expense",
     srcs = ["expense.cpp"],
@@ -29,7 +28,7 @@ cc_binary(
         # "@fmt//:fmt",
         "@fmt",
         "@cli11",
+        # "@cxxopts//:cxxopts",
         ":expense_manager",
     ],
 )
-
