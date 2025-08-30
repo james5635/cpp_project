@@ -1,0 +1,16 @@
+bazel_dep(name = "rules_cc", version = "0.2.0")
+bazel_dep(name = "curl", version = "8.8.0.bcr.3")
+bazel_dep(name = "nlohmann_json", version = "3.12.0")
+bazel_dep(name = "cli11", version = "2.5.0")
+bazel_dep(name = "asio", version = "1.34.2")
+
+# Hedron's Compile Commands Extractor for Bazel
+# https://github.com/hedronvision/bazel-compile-commands-extractor
+bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
+git_override(
+    module_name = "hedron_compile_commands",
+    remote = "https://github.com/mikael-s-persson/bazel-compile-commands-extractor",
+    commit = "02d15621b528efd877f5d5657c4b738523a0eb17",
+    # Replace the commit hash (above) with the latest (https://github.com/hedronvision/bazel-compile-commands-extractor/commits/main).
+    # Even better, set up Renovate and let it do the work for you (see "Suggestion: Updates" in the README).
+)
