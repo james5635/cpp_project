@@ -36,8 +36,9 @@ public:
     }
     return false;
   }
+  void clear() { data_.clear(); }
 
-  // private:
+private:
   std::unordered_map<std::string, std::string> data_;
   std::mutex mu_;
 };
@@ -110,6 +111,20 @@ void handle_client(tcp::socket socket, std::string origin) {
     //   path.erase(0, 1);
     // }
 
+    {
+      if (path == "/clear-cache") {
+        cache.clear();
+        std::string response_body = "Cache cleared!";
+        response = "HTTP/1.1 200 OK\r\n"
+                   "Content-Type: text/plain\r\n"
+                   "Content-Length: " +
+                   std::to_string(response_body.size()) + "\r\n\r\n" +
+                   response_body;
+
+        asio::write(socket, asio::buffer(response));
+        return;
+      }
+    }
     {
       std::string request_status_line = method + " " + path + " " + version;
       request_status_line += "\r\n";
@@ -284,8 +299,48 @@ int main(int argc, char **argv) {
   std::string origin;
   app.add_option("--port", port, "port number that server listen on");
   app.add_option("--origin", origin, "forwarding url");
+  bool clear_cache = false;
+  app.add_flag("--clear-cache", clear_cache, "clear cache");
   CLI11_PARSE(app, argc, argv);
+  if (clear_cache) {
+    std::ifstream meta("/home/jame/.cache/caching-proxy.lock");
+    std::string line;
+    int port = 0;
+    while (std::getline(meta, line)) {
+      if (line.rfind("port=", 0) == 0) {
+        port = std::stoi(line.substr(5));
+      }
+    }
+    if (port > 0) {
+      CURL *curl = curl_easy_init();
+      if (curl) {
+        struct Memory response_body = {0};
+
+        std::string url =
+            "http://localhost:" + std::to_string(port) + "/clear-cache";
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_POST, 1L);
+
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&response_body);
+
+        curl_easy_perform(curl);
+        curl_easy_cleanup(curl);
+
+        std::cout << std::string(response_body.data) + "\n";
+      }
+    }
+
+    return 0;
+  }
   if (port != 0 && !origin.empty()) {
+    {
+      // After binding server and knowing port
+      std::ofstream meta("/home/jame/.cache/caching-proxy.lock");
+      meta << "pid=" << getpid() << "\n";
+      meta << "port=" << port << "\n";
+      meta.close();
+    }
     try {
       asio::io_context io_context;
       tcp::acceptor acceptor(io_context, tcp::endpoint(tcp::v4(), port));
@@ -300,9 +355,11 @@ int main(int argc, char **argv) {
       }
     } catch (std::exception &e) {
       std::cerr << "Server error: " << e.what() << "\n";
+      return 1;
     }
   } else {
     std::cerr << app.help() << std::endl;
+    return 1;
   }
 
   return 0;

@@ -5,3 +5,4 @@ A collection of applications implemented in c++
 - [x] Expense Tracker
 - [x] Number Guessing Game
 - [x] TMDB CLI Tool
+- [x] Caching Proxy
